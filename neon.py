@@ -8,6 +8,8 @@ def setup(screen):
     """Initialize Neon's module with the display surface."""
     global _screen
     _screen = screen
+    # screen.fill((0, 0, 0))
+
 
 
 def handle_event(event):
@@ -22,4 +24,4 @@ def update(dt):
 
 def draw(screen):
     """Draw Neon's visuals to the screen."""
-    screen.fill((255, 0, 255))  # Neon pink background
+    screen.fill((0, 0, 255))  # Neon pink background

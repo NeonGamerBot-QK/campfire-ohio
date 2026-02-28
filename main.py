@@ -36,7 +36,6 @@ while running:
         if hasattr(mod, "update"):
             mod.update(dt)
 
-    screen.fill((0, 0, 0))
 
     # Call each module's draw()
     for mod in modules:
