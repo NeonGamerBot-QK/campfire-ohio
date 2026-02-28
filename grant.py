@@ -46,12 +46,8 @@ def handle_event(event):
 
 def update(dt):
     global game
-<<<<<<< HEAD
-
-=======
     if game.game_over:
         return
->>>>>>> eb1e906d350aeaeb01e96e821059eb1d35c2dda5
     game.player.update(game.dt, game.pressed_keys)
 
 def draw(screen):
