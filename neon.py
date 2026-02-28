@@ -59,7 +59,10 @@ def update(dt):
     # Update NPCs with player proximity and shock damage
     for npc in npcs:
         npc.update(dt, player=_game.player, healthbar=hb)
-    # Remove NPCs that finished their Death animation
+    # Remove NPCs that finished their Death animation and award XP
+    for npc in npcs:
+        if npc.removable:
+            _game.player.gain_xp(2)
     npcs[:] = [npc for npc in npcs if not npc.removable]
 
 """
@@ -110,3 +113,8 @@ def draw(screen):
         npc.draw(screen)
     if hb:
         hb.draw(screen)
+    # Draw level and XP below the health bar
+    if _game.player:
+        font = pygame.font.SysFont(None, 24)
+        level_text = font.render(f"Lv {_game.player.level}  XP {_game.player.xp}/{_game.player.xp_to_next_level}", True, (255, 255, 255))
+        screen.blit(level_text, (10, 35))

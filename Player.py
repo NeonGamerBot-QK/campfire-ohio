@@ -10,7 +10,7 @@ class Player:
         self.attack_cooldown = 0.5  # seconds
         self.xp = 0
         self.level = 1
-        self.xp_to_next_level = 100
+        self.xp_to_next_level = 10
         self.projectile_img = pygame.image.load("./assets/seapickle.png").convert_alpha()  # Placeholder for projectile image
         self.projectiles = pygame.sprite.Group()  # Group to hold projectiles
         self.last_facing = None
@@ -82,11 +82,12 @@ class Player:
             curr_sprite.play("Attack", loop=False)
 
     def gain_xp(self, amount):
+        """Add XP and level up when threshold is reached (10 * level to level up)."""
         self.xp += amount
         while self.xp >= self.xp_to_next_level:
             self.xp -= self.xp_to_next_level
             self.level += 1
-            self.xp_to_next_level = int(self.xp_to_next_level * 1.5)  # Increase XP needed for next level
+            self.xp_to_next_level = 10 * self.level
 
     def draw(self, screen):
         self.sprite.draw(screen)
