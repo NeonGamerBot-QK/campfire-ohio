@@ -46,9 +46,27 @@ def handle_event(event):
 
 def update(dt):
     global game
+<<<<<<< HEAD
+=======
+    if game.game_over:
+        return
+    if not game.player.sprites(): return
+    
+    sprite = game.player.sprites()[0]
+    vx, vy = 0, 0
+    
+    if any(k in game.pressed_keys for k in [pygame.K_d, pygame.K_RIGHT]):
+        vx += 150
+        sprite.flip_x = False # Face Right
+    if any(k in game.pressed_keys for k in [pygame.K_a, pygame.K_LEFT]):
+        vx -= 150
+        sprite.flip_x = True  # Face Left
+>>>>>>> fa89882b5ad31b66265e190cffa64d3184ddaa52
 
     game.player.update(game.dt, game.pressed_keys)
 
 def draw(screen):
     """Draw Grant's visuals to the screen."""
+    if game.game_over:
+        return
     game.player.draw(screen)
