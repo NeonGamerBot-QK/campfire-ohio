@@ -5,6 +5,7 @@ import Game
 pygame.init()
 surface = pygame.display.set_mode((600, 400))
 
+clock = pygame.time.Clock()
 game = Game(clock)
 
 def start_the_game():
