@@ -17,6 +17,7 @@ class Game:
         self.space_boss = None  # Placeholder for space boss sprite or group
         self.water_boss = None  # Placeholder for enemies group
         self.platforms = None  # Placeholder for platforms group
+        self.npcs = []  # List of active NPCs
 
         self.modules = [neon, mathew, grant]
 

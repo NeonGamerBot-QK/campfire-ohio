@@ -7,27 +7,33 @@ from Npc import Npc
 _screen = None
 _game = None
 hb = None
-npcs = []
 
 max_health = 100
 health = 100
 ratio = health / max_health
+NPC_COUNT = 2
+VARIANTS = [str(v) for v in range(1, 7)]
+
+
+def spawn_npc():
+    """Spawn a single NPC at a random position with a random water asset variant."""
+    screen_width, screen_height = _screen.get_size()
+    variant = random.choice(VARIANTS)
+    x = random.randint(50, screen_width - 50)
+    y = random.randint(50, screen_height - 150)
+    return Npc(pygame.sprite.Group(), f"./assets/Water assets/{variant}", x=x, y=y,
+               patrol_speed=random.randint(40, 120))
 
 def setup(game):
     """Initialize Neon's module with the Game instance."""
-    global _screen, _game, hb, npcs
+    global _screen, _game, hb
     _game = game
     _screen = game.screen
     hb = HealthBar(10, 10, 200, 20, max_health)
     hb.hp = health
-    # Spawn 2 NPCs at random positions with random water asset variants
-    screen_width, screen_height = _screen.get_size()
-    variants = [str(v) for v in range(1, 7)]
-    for _ in range(2):
-        variant = random.choice(variants)
-        x = random.randint(100, screen_width - 100)
-        y = random.randint(100, screen_height - 100)
-        npcs.append(Npc(pygame.sprite.Group(), f"./assets/Water assets/{variant}", x=x, y=y))
+    # Spawn initial NPCs
+    for _ in range(NPC_COUNT):
+        _game.npcs.append(spawn_npc())
 
 
 def handle_event(event):
@@ -57,13 +63,21 @@ def update(dt):
     # Clamp player position to screen bounds
     sprite.rect.clamp_ip(pygame.Rect(0, 0, screen_width, screen_height))
     # Update NPCs with player proximity and shock damage
-    for npc in npcs:
+    for npc in _game.npcs:
         npc.update(dt, player=_game.player, healthbar=hb)
-    # Remove NPCs that finished their Death animation and award XP
-    for npc in npcs:
+    # Remove dead NPCs, award XP, and respawn replacements
+    respawn_count = 0
+    for npc in _game.npcs:
         if npc.removable:
-            _game.player.gain_xp(2)
-    npcs[:] = [npc for npc in npcs if not npc.removable]
+            levels = _game.player.gain_xp(2)
+            # Increase max HP by 1 and heal 10% per level gained
+            if levels > 0 and hb:
+                hb.max_hp += levels
+                hb.hp = min(hb.max_hp, hb.hp + int(hb.max_hp * 0.1) * levels)
+            respawn_count += 1
+    _game.npcs[:] = [npc for npc in _game.npcs if not npc.removable]
+    for _ in range(respawn_count):
+        _game.npcs.append(spawn_npc())
 
 """
 @source https://stackoverflow.com/questions/52045413/setting-screen-fill-as-a-gradient-in-pygame
@@ -109,7 +123,7 @@ def draw(screen):
         return
     gradient_surface = vertical(screen.get_size(), (0, 255, 255, 255),(0, 0, 255, 255))
     screen.blit(gradient_surface, (0, 0))
-    for npc in npcs:
+    for npc in _game.npcs:
         npc.draw(screen)
     if hb:
         hb.draw(screen)
