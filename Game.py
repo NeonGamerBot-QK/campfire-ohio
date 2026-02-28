@@ -8,6 +8,8 @@ class Game:
         self.screen = None
         self.clock = None
         self.running = True
+        self.pressed_keys = set()
+
         self.player = None  # Placeholder for player sprite or group
         self.space_boss = None  # Placeholder for space boss sprite or group
         self.water_boss = None  # Placeholder for enemies group
@@ -22,7 +24,6 @@ class Game:
         for mod in self.modules:
             if hasattr(mod, "setup"):
                 mod.setup(self)
-
 
     def handle_event(self, event):
         for mod in self.modules:

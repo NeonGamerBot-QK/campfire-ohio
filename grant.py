@@ -5,17 +5,15 @@ import pygame
 import sys
 import random
 
-_screen = None
-player = pygame.sprite.Group()
-pressed_keys = set()
+game = None
 
+def setup(game_obj):
+    """Initialize Grant's module with the game object."""
+    global game
+    game = game_obj
+    game.player = pygame.sprite.Group()
 
-def setup(screen):
-    """Initialize Grant's module with the display surface."""
-    global _screen
-    _screen = screen
-
-    initiate_sprite("./Sprites/Character Animations/", player)
+    initiate_sprite("./Sprites/Character Animations/", game.player)
 
     
 def initiate_sprite(path, sprite_group):
@@ -40,30 +38,30 @@ def initiate_sprite(path, sprite_group):
     sprite_group.add(AnimatedSprite(0, 0, animation_frames, default_animation="Idle", animation_speed=7))
 
 def handle_event(event):
-    global pressed_keys
+    global game
     if event.type == pygame.KEYDOWN:
-        pressed_keys.add(event.key)
+        game.pressed_keys.add(event.key)
     elif event.type == pygame.KEYUP:
-        pressed_keys.discard(event.key)
+        game.pressed_keys.discard(event.key)
 
 def update(dt):
-    global player, pressed_keys
-    if not player.sprites(): return
+    global game
+    if not game.player.sprites(): return
     
-    sprite = player.sprites()[0]
+    sprite = game.player.sprites()[0]
     vx, vy = 0, 0
     
-    if any(k in pressed_keys for k in [pygame.K_d, pygame.K_RIGHT]):
+    if any(k in game.pressed_keys for k in [pygame.K_d, pygame.K_RIGHT]):
         vx += 150
         sprite.flip_x = False # Face Right
-    if any(k in pressed_keys for k in [pygame.K_a, pygame.K_LEFT]):
+    if any(k in game.pressed_keys for k in [pygame.K_a, pygame.K_LEFT]):
         vx -= 150
         sprite.flip_x = True  # Face Left
 
-    if any(k in pressed_keys for k in [pygame.K_w, pygame.K_UP]):
+    if any(k in game.pressed_keys for k in [pygame.K_w, pygame.K_UP]):
         vy -= 150
         sprite.flip_y = False  # Flip upside down (swimming up)
-    if any(k in pressed_keys for k in [pygame.K_s, pygame.K_DOWN]):
+    if any(k in game.pressed_keys for k in [pygame.K_s, pygame.K_DOWN]):
         vy += 150
         sprite.flip_y = True # Normal orientation (swimming down)
 
@@ -76,8 +74,8 @@ def update(dt):
         sprite.flip_y = False # Reset flip when idle
         sprite.vy = 20        # Gravity drift
 
-    player.update(dt)
+    game.player.update(dt)
 
 def draw(screen):
     """Draw Grant's visuals to the screen."""
-    player.draw(screen)
+    game.player.draw(screen)
