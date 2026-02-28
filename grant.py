@@ -60,5 +60,4 @@ def update(dt):
 
 def draw(screen):
     """Draw Grant's visuals to the screen."""
-    screen.fill((255, 0, 255))  # Neon pink background
     player.draw(screen)
