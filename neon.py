@@ -18,9 +18,7 @@ def setup(screen):
 
 def handle_event(event):
     """Handle pygame events for Neon's module."""
-    if event.type == pygame.KEYDOWN and event.key == pygame.K_p:
-        if hb:
-            hb.hp = max(0, hb.hp - 10)
+    pass
 
 
 def update(dt):
