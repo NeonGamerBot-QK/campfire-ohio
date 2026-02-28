@@ -9,6 +9,7 @@ class Player:
         self.attack_timer = 0
         self.attack_damage = 10
         self.attack_cooldown = 0.5
+        self.hp = 100
         self.xp = 0
         self.level = 1
         self.xp_to_next_level = 10
