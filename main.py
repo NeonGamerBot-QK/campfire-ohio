@@ -1,5 +1,6 @@
 from Game import Game
 import pygame
+import menu
 
 pygame.init()
 
@@ -9,6 +10,7 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Water Space Platformer")
 clock = pygame.time.Clock()
 
+menu.is_enabled()
 
 while game.running:
     for event in pygame.event.get():
