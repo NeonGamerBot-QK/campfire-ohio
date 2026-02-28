@@ -31,6 +31,8 @@ def handle_event(event):
 
 def update(dt):
     """Update Mathew's game logic each frame."""
+    if _game.game_over:
+        return
     # Move platforms based on speed
     for i, platform in enumerate(platforms):
         platform.x += platform_speeds[i]
@@ -40,6 +42,7 @@ def update(dt):
 
 def draw(screen):
     """Draw Mathew's visuals to the screen."""
+    if _game.game_over:
+        return
     for platform in platforms:
-        # Change screen(...) to a valid color tuple and use pygame.draw.rect correctly
         pygame.draw.rect(screen, GREEN, platform)

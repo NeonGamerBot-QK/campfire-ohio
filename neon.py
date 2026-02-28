@@ -1,4 +1,5 @@
 # Neon's code goes here
+import os
 import pygame
 from healthbar import *
 _screen = None
@@ -21,8 +22,8 @@ def setup(game):
 def handle_event(event):
     """Handle pygame events for Neon's module."""
     if event.type == pygame.KEYDOWN:
-        # Press P to take 10 damage (temp)
-        if event.key == pygame.K_p and hb:
+        # Press P to take 10 damage (temp, requires SELF_DAMADGE_CODE env var)
+        if event.key == pygame.K_p and hb and os.environ.get("SELF_DAMADGE_CODE"):
             hb.hp = max(0, hb.hp - 10)
         # Press R to restart after game over
         if event.key == pygame.K_r and _game.game_over:
@@ -75,8 +76,10 @@ def vertical(size, startcolor, endcolor):
 def draw(screen):
     """Draw Neon's visuals to the screen."""
     if _game.game_over:
-        # Dark overlay with game over text
-        screen.fill((0, 0, 0))
+        # Semi-transparent black overlay (20% opacity) over the background
+        overlay = pygame.Surface(screen.get_size(), pygame.SRCALPHA)
+        overlay.fill((0, 0, 0, 51))
+        screen.blit(overlay, (0, 0))
         font = pygame.font.SysFont(None, 72)
         text = font.render("GAME OVER", True, (255, 0, 0))
         screen.blit(text, text.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2)))

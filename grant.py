@@ -46,6 +46,8 @@ def handle_event(event):
 
 def update(dt):
     global game
+    if game.game_over:
+        return
     if not game.player.sprites(): return
     
     sprite = game.player.sprites()[0]
@@ -78,4 +80,6 @@ def update(dt):
 
 def draw(screen):
     """Draw Grant's visuals to the screen."""
+    if game.game_over:
+        return
     game.player.draw(screen)
