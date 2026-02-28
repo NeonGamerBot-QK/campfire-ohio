@@ -12,7 +12,7 @@ def setup(game_obj):
     """Initialize Grant's module with the game object."""
     global game
     game = game_obj
-    game.player = Player.Player(pygame.sprite.Group())
+    game.player = Player.Player(pygame.sprite.Group(), game)  # Pass the game instance to the player
     initiate_sprite("./Sprites/Character Animations/", game.player)
 
     
@@ -48,7 +48,7 @@ def update(dt):
     global game
     if game.game_over:
         return
-    game.player.update(game.dt, game.pressed_keys)
+    game.player.update()
 
 def draw(screen):
     """Draw Grant's visuals to the screen."""

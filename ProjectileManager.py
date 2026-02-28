@@ -19,6 +19,9 @@ class ProjectileManager:
 
     def update(self, dt):
         self.projectiles.update(dt)
+        for projectile in self.projectiles:
+            if not pygame.display.get_surface().get_rect().colliderect(projectile.rect):
+                projectile.kill()
 
     def draw(self, screen):
         self.projectiles.draw(screen)
