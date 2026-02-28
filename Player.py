@@ -79,6 +79,21 @@ class Player:
                 self.facing_dir.x, 
                 self.facing_dir.y
             )
+    def gain_xp(self, amount):
+        """
+        Add XP and level up when threshold is reached (10 * level to level up).
+
+        Returns:
+            Number of levels gained.
+        """
+        levels_gained = 0
+        self.xp += amount
+        while self.xp >= self.xp_to_next_level:
+            self.xp -= self.xp_to_next_level
+            self.level += 1
+            self.xp_to_next_level = 10 * self.level
+            levels_gained += 1
+        return levels_gained
 
     def draw(self, screen):
         self.sprite.draw(screen)
