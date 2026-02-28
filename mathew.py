@@ -39,4 +39,4 @@ def update(dt):
 def draw(screen):
     """Draw Mathew's visuals to the screen."""
     for platform in platforms:
-        pygame.draw.rect(screen(225,255,0), platform)
+        pygame.draw.rect(screen, GREEN, platform)
