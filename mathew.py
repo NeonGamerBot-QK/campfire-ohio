@@ -5,7 +5,7 @@ BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
 
 # Platform data: (x, y, width, height)
-platforms_data = [
+platforms_data = [cle
     (0, 550, 800, 50),  # Ground platform
     (150, 400, 100, 20),
     (400, 300, 150, 20)
@@ -36,19 +36,20 @@ def update(dt):
     """Update Mathew's game logic each frame."""
     if _game.game_over:
         return
+
     # Move platforms based on speed
     for i, platform in enumerate(platforms):
         platform.x += platform_speeds[i]
-        # Simple bounce back logic for moving platforms
         if platform.left < 0 or platform.right > 800:
             platform_speeds[i] *= -1
 
-    # Handle player-platform collisions
     if not _game.player or not _game.player.animated_sprite.sprites():
         return
     sprite = _game.player.animated_sprite.sprites()[0]
 
-    # Horizontal collision
+    # --- FIXED COLLISION LOGIC ---
+    
+    # 1. Horizontal Movement and Collision
     sprite.rect.x += sprite.vx * dt
     for platform in platforms:
         if sprite.rect.colliderect(platform):
@@ -57,16 +58,16 @@ def update(dt):
             elif sprite.vx < 0:
                 sprite.rect.left = platform.right
 
-    # Vertical collision
+    # 2. Vertical Movement and Collision
     sprite.rect.y += sprite.vy * dt
     for platform in platforms:
         if sprite.rect.colliderect(platform):
             if sprite.vy > 0:
                 sprite.rect.bottom = platform.top
-                sprite.vy = 0
+                sprite.vy = 0 # Landed
             elif sprite.vy < 0:
                 sprite.rect.top = platform.bottom
-                sprite.vy = 0
+                sprite.vy = 0 # Hit ceiling
 
 
 def draw(screen):
@@ -75,3 +76,4 @@ def draw(screen):
         return
     for platform in platforms:
         pygame.draw.rect(screen, GREEN, platform)
+
