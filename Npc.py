@@ -111,15 +111,15 @@ class Npc:
         player_in_shock_range = False
 
         # Check player proximity if player exists
-        if player and player.animated_sprite.sprites():
-            player_rect = player.animated_sprite.sprites()[0].rect
+        if player and player.sprite.sprites():
+            player_rect = player.sprite.sprites()[0].rect
             distance = self._distance_to_player(player_rect)
             player_nearby = distance <= self.AGGRO_RANGE
             player_in_shock_range = distance <= self.SHOCK_RANGE
 
         if player_nearby:
             # Chase toward the player instead of patrolling
-            player_center_x = player.animated_sprite.sprites()[0].rect.centerx
+            player_center_x = player.sprite.sprites()[0].rect.centerx
             if player_center_x > self.sprite.rect.centerx:
                 self.direction = 1
             else:
