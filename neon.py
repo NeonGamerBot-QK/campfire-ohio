@@ -2,9 +2,11 @@
 import os
 import pygame
 from healthbar import *
+from Npc import Npc
 _screen = None
 _game = None
 hb = None
+npc = None
 
 max_health = 100
 health = 100
@@ -12,11 +14,12 @@ ratio = health / max_health
 
 def setup(game):
     """Initialize Neon's module with the Game instance."""
-    global _screen, _game, hb
+    global _screen, _game, hb, npc
     _game = game
     _screen = game.screen
     hb = HealthBar(10, 10, 200, 20, max_health)
     hb.hp = health
+    npc = Npc(pygame.sprite.Group(), "./assets/Water assets/1", x=400, y=300)
 
 
 def handle_event(event):
@@ -45,6 +48,9 @@ def update(dt):
     screen_width, screen_height = _screen.get_size()
     # Clamp player position to screen bounds
     sprite.rect.clamp_ip(pygame.Rect(0, 0, screen_width, screen_height))
+    # Update NPC with player proximity and shock damage
+    if npc:
+        npc.update(dt, player=_game.player, healthbar=hb)
 
 """
 @source https://stackoverflow.com/questions/52045413/setting-screen-fill-as-a-gradient-in-pygame
@@ -90,5 +96,7 @@ def draw(screen):
         return
     gradient_surface = vertical(screen.get_size(), (0, 255, 255, 255),(0, 0, 255, 255))
     screen.blit(gradient_surface, (0, 0))
+    if npc:
+        npc.draw(screen)
     if hb:
         hb.draw(screen)
