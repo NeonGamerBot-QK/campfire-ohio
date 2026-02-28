@@ -43,12 +43,8 @@ def update(dt):
         if platform.left < 0 or platform.right > 800:
             platform_speeds[i] *= -1
 
-<<<<<<< HEAD
     # Handle player-platform collisions
     if not _game.player or not _game.player.sprite.sprites():
-=======
-    if not _game.player or not _game.player.animated_sprite.sprites():
->>>>>>> 200301f8c6520cccb19d83f91af5ef06f833c80b
         return
     sprite = _game.player.sprite.sprites()[0]
 
