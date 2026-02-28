@@ -27,9 +27,9 @@ def setup(screen):
 
 def handle_event(event):
     """Handle pygame events for Neon's module."""
-        # Draw platforms
-        for platform in platforms:
-            pygame.draw.rect(screen, BLUE, platform) #
+    # Draw platforms
+    for platform in platforms:
+        pygame.draw.rect(screen, BLUE, platform) #
 
     pass
 
