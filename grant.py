@@ -46,8 +46,19 @@ def handle_event(event):
 
 def update(dt):
     global game
-    if game.game_over:
-        return
+
+    if not game.player.sprites(): return
+    
+    sprite = game.player.sprites()[0]
+    vx, vy = 0, 0
+    
+    if any(k in game.pressed_keys for k in [pygame.K_d, pygame.K_RIGHT]):
+        vx += 150
+        sprite.flip_x = False # Face Right
+    if any(k in game.pressed_keys for k in [pygame.K_a, pygame.K_LEFT]):
+        vx -= 150
+        sprite.flip_x = True  # Face Left
+
     game.player.update(game.dt, game.pressed_keys)
 
 def draw(screen):
