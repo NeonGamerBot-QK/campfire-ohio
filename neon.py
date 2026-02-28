@@ -1,17 +1,18 @@
 # Neon's code goes here
 import pygame
-import grant
 from healthbar import *
 _screen = None
+_game = None
 hb = None
 
 max_health = 100
-health = 20
+health = 100
 ratio = health / max_health
 
 def setup(game):
     """Initialize Neon's module with the Game instance."""
-    global _screen, hb
+    global _screen, _game, hb
+    _game = game
     _screen = game.screen
     hb = HealthBar(10, 10, 200, 20, max_health)
     hb.hp = health
@@ -19,14 +20,27 @@ def setup(game):
 
 def handle_event(event):
     """Handle pygame events for Neon's module."""
-    pass
+    if event.type == pygame.KEYDOWN:
+        # Press P to take 10 damage (temp)
+        if event.key == pygame.K_p and hb:
+            hb.hp = max(0, hb.hp - 10)
+        # Press R to restart after game over
+        if event.key == pygame.K_r and _game.game_over:
+            _game.game_over = False
+            hb.hp = max_health
 
 
 def update(dt):
     """Update Neon's game logic each frame."""
-    if not grant.player.sprites():
+    if _game.game_over:
         return
-    sprite = grant.player.sprites()[0]
+    # Trigger game over when health runs out
+    if hb and hb.hp <= 0:
+        _game.game_over = True
+        return
+    if not _game.player or not _game.player.sprites():
+        return
+    sprite = _game.player.sprites()[0]
     screen_width, screen_height = _screen.get_size()
     # Clamp player position to screen bounds
     sprite.rect.clamp_ip(pygame.Rect(0, 0, screen_width, screen_height))
@@ -60,6 +74,17 @@ def vertical(size, startcolor, endcolor):
 
 def draw(screen):
     """Draw Neon's visuals to the screen."""
+    if _game.game_over:
+        # Dark overlay with game over text
+        screen.fill((0, 0, 0))
+        font = pygame.font.SysFont(None, 72)
+        text = font.render("GAME OVER", True, (255, 0, 0))
+        screen.blit(text, text.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2)))
+        # Restart prompt
+        small_font = pygame.font.SysFont(None, 36)
+        restart_text = small_font.render("Press R to restart", True, (255, 255, 255))
+        screen.blit(restart_text, restart_text.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2 + 50)))
+        return
     gradient_surface = vertical(screen.get_size(), (0, 255, 255, 255),(0, 0, 255, 255))
     screen.blit(gradient_surface, (0, 0))
     if hb:

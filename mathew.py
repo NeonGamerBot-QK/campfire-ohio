@@ -16,11 +16,14 @@ platforms = [pygame.Rect(data) for data in platforms_data]
 platform_speeds = [0, 2, 2] # Speed for each platform (0 for ground)
 
 _screen = None
+_game = None
 
-def setup(screen):
-    """Initialize Mathew's module with the display surface."""
-    global _screen
-    _screen = screen
+def setup(game):
+    """Initialize Mathew's module with the Game instance."""
+    global _screen, _game
+    _game = game
+    _screen = game.screen
+    game.platforms = platforms
 
 def handle_event(event):
     """Handle pygame events for Mathew's module."""

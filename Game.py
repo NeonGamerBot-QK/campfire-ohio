@@ -10,6 +10,7 @@ class Game:
         self.running = True
         self.pressed_keys = set()
 
+        self.game_over = False
         self.player = None  # Placeholder for player sprite or group
         self.space_boss = None  # Placeholder for space boss sprite or group
         self.water_boss = None  # Placeholder for enemies group
