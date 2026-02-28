@@ -46,8 +46,6 @@ def handle_event(event):
 
 def update(dt):
     global game
-<<<<<<< HEAD
-=======
     if game.game_over:
         return
     if not game.player.sprites(): return
@@ -61,7 +59,6 @@ def update(dt):
     if any(k in game.pressed_keys for k in [pygame.K_a, pygame.K_LEFT]):
         vx -= 150
         sprite.flip_x = True  # Face Left
->>>>>>> fa89882b5ad31b66265e190cffa64d3184ddaa52
 
     game.player.update(game.dt, game.pressed_keys)
 
