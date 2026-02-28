@@ -59,6 +59,8 @@ def update(dt):
     # Update NPCs with player proximity and shock damage
     for npc in npcs:
         npc.update(dt, player=_game.player, healthbar=hb)
+    # Remove NPCs that finished their Death animation
+    npcs[:] = [npc for npc in npcs if not npc.removable]
 
 """
 @source https://stackoverflow.com/questions/52045413/setting-screen-fill-as-a-gradient-in-pygame

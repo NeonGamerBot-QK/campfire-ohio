@@ -81,7 +81,14 @@ class Npc:
         self.attack_every = 2.0
         self.shock_timer = 0
         self.shock_interval = 1.0  # Damage the player every 1 second while in range
+        self.hp = 30
+        self.hurt_timer = 0
+        self.hurt_duration = 0.3  # How long to play Hurt before resuming
+        self.is_hurt = False
         self.alive = True
+        self.dead_timer = 0
+        self.death_duration = 1.0  # How long Death animation plays before removal
+        self.removable = False
 
         # Patrol attributes
         self.patrol_speed = patrol_speed
@@ -105,21 +112,49 @@ class Npc:
             healthbar: The HealthBar object (optional, for shocking the player).
         """
         if not self.alive:
+            # Play Death animation then mark for removal
+            self.dead_timer += dt
+            self.animated_sprite.update(dt)
+            if self.dead_timer >= self.death_duration:
+                self.removable = True
+                self.sprite.kill()
             return
+
+        # While hurt, pause movement and wait for hurt animation to finish
+        if self.is_hurt:
+            self.sprite.vx = 0
+            self.hurt_timer += dt
+            if self.hurt_timer >= self.hurt_duration:
+                self.is_hurt = False
+            self.animated_sprite.update(dt)
+            return
+
+        # Check projectile collisions with player's pickles
+        if player and player.projectiles:
+            hits = pygame.sprite.spritecollide(self.sprite, player.projectiles, True)
+            if hits:
+                self.hp -= player.attack_damage
+                if self.hp <= 0:
+                    self.die()
+                    self.animated_sprite.update(dt)
+                    return
+                self.take_damage()
+                self.animated_sprite.update(dt)
+                return
 
         player_nearby = False
         player_in_shock_range = False
 
         # Check player proximity if player exists
-        if player and player.animated_sprite.sprites():
-            player_rect = player.animated_sprite.sprites()[0].rect
+        if player and player.sprite.sprites():
+            player_rect = player.sprite.sprites()[0].rect
             distance = self._distance_to_player(player_rect)
             player_nearby = distance <= self.AGGRO_RANGE
             player_in_shock_range = distance <= self.SHOCK_RANGE
 
         if player_nearby:
             # Chase toward the player instead of patrolling
-            player_center_x = player.animated_sprite.sprites()[0].rect.centerx
+            player_center_x = player.sprite.sprites()[0].rect.centerx
             if player_center_x > self.sprite.rect.centerx:
                 self.direction = 1
             else:
@@ -130,8 +165,8 @@ class Npc:
                 self.attacking = True
                 self.sprite.play("Attack")
 
-            # Shock the player on a timer (variant 1 = jellyfish shock)
-            if player_in_shock_range and healthbar and "1" in self.variant_path:
+            # Damage the player on a timer when in shock range
+            if player_in_shock_range and healthbar:
                 self.shock_timer += dt
                 if self.shock_timer >= self.shock_interval:
                     self.shock_timer = 0
@@ -159,8 +194,10 @@ class Npc:
         self.animated_sprite.update(dt)
 
     def take_damage(self):
-        """Play the Hurt animation when the NPC takes damage."""
+        """Play the Hurt animation and pause briefly when the NPC takes damage."""
         if self.alive:
+            self.is_hurt = True
+            self.hurt_timer = 0
             self.sprite.play("Hurt")
 
     def die(self):
