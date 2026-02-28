@@ -1,7 +1,6 @@
 import pygame
 from ProjectileManager import *
 
-
 class Player:
 
     def __init__(self, animated_sprite, game):
@@ -16,7 +15,6 @@ class Player:
         self.game = game
         self.facing_dir = pygame.math.Vector2(1, 0)
         self.projectile_manager = ProjectileManager("./assets/seapickle.png")
-        self.hp = 100  # Player health
 
     def update(self):
         self.attack_timer += self.game.dt
