@@ -11,15 +11,38 @@ pygame.display.set_caption("Water Space Platformer")
 clock = pygame.time.Clock()
 game = Game(clock)
 
+# Track whether the game has started
+game_started = False
 
-menu.is_enabled()
 
-while game.running:
-    for event in pygame.event.get():
-        game.handle_event(event)
+def start_game():
+    """Callback for the menu Play button."""
+    global game_started
+    game.setup(screen)
+    game_started = True
+    main_menu.disable()
 
-    game.update()
 
-    game.draw()
+main_menu = menu.create_menu(screen, start_game)
+
+while True:
+    events = pygame.event.get()
+    for event in events:
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            exit()
+
+    if main_menu.is_enabled():
+        main_menu.update(events)
+        if main_menu.is_enabled():
+            main_menu.draw(screen)
+            pygame.display.flip()
+    elif game_started:
+        if not game.running:
+            break
+        for event in events:
+            game.handle_event(event)
+        game.update()
+        game.draw()
 
 pygame.quit()

@@ -1,39 +1,23 @@
 import pygame
 import pygame_menu
-import Game
 
-pygame.init()
-surface = pygame.display.set_mode((600, 400))
 
-def start_the_game():
-    # This function is called when the "Play" button is clicked
-    print("Game Started!")
-    Game.setup(screen)
-    # Add your game logic here
-    pass
+def create_menu(screen, on_play):
+    """
+    Create and return the main menu.
 
-# Create the menu
-menu = pygame_menu.Menu('Welcome', 600, 400, theme=pygame_menu.themes.THEME_BLUE)
+    Args:
+        screen: The pygame display surface.
+        on_play: Callback function to run when 'Play' is pressed.
 
-# Add a button that calls the 'start_the_game' function
-menu.add.button('Play', start_the_game)
-
-# Add a button to exit the application
-menu.add.button('Exit', pygame_menu.events.EXIT)
-
-# Main game loop
-while True:
-    # Handle events for the menu
-    events = pygame.event.get()
-    for event in events:
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            exit()
-
-    # If the menu is enabled, update and draw it
-    if menu.is_enabled():
-        menu.update(events)
-        menu.draw(surface)
-
-    # Update the display
-    pygame.display.update()
+    Returns:
+        The pygame_menu.Menu instance.
+    """
+    width, height = screen.get_size()
+    main_menu = pygame_menu.Menu(
+        'Water Space Platformer', width, height,
+        theme=pygame_menu.themes.THEME_BLUE
+    )
+    main_menu.add.button('Play', on_play)
+    main_menu.add.button('Exit', pygame_menu.events.EXIT)
+    return main_menu
