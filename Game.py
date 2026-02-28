@@ -18,6 +18,7 @@ class Game:
         self.water_boss = None  # Placeholder for enemies group
         self.platforms = None  # Placeholder for platforms group
         self.npcs = []  # List of active NPCs
+        self.healthbar = None  # Placeholder for healthbar instance
 
         self.modules = [neon, mathew, grant]
 

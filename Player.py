@@ -66,13 +66,10 @@ class Player:
         for npc in self.game.npcs:
             hits = pygame.sprite.spritecollide(curr_sprite, npc.projectile_manager.projectiles, True)
             if hits:
-                self.taking_damage(npc.attack_damage * len(hits))
+                self.taking_damage(npc.attack_damage)
 
     def taking_damage(self, amount=10):
-        self.hp = max(0, self.hp - amount)
-        # Optionally update a healthbar via the game reference
-        if hasattr(self.game, 'healthbar') and self.game.healthbar:
-            self.game.healthbar.hp = self.hp
+        self.game.healthbar.hp = max(0, self.game.healthbar.hp - amount)
 
     def attack(self, curr_sprite):
         if self.attack_timer >= self.attack_cooldown:
@@ -95,6 +92,8 @@ class Player:
             self.level += 1
             self.xp_to_next_level = 10 * self.level
             levels_gained += 1
+        self.attack_damage += 2 * levels_gained  # Increase attack damage by 2 per level
+        self.game.healthbar.max_hp += 20 * levels_gained  # Increase max HP by 5 per level
         return levels_gained
 
     def draw(self, screen):

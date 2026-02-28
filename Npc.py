@@ -185,7 +185,6 @@ class Npc:
                 self.shock_timer += dt
                 if self.shock_timer >= self.shock_interval:
                     self.shock_timer = 0
-                    healthbar.hp = max(0, healthbar.hp - self.attack_damage)
         else:
             # No player nearby — patrol normally
             if self.attacking:
