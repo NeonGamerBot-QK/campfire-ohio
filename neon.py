@@ -30,6 +30,7 @@ def setup(game):
     _game = game
     _screen = game.screen
     hb = HealthBar(10, 10, 200, 20, max_health)
+    game.healthbar = hb
     hb.hp = health
     # Spawn initial NPCs
     for _ in range(NPC_COUNT):
