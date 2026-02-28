@@ -44,9 +44,9 @@ def update(dt):
             platform_speeds[i] *= -1
 
     # Handle player-platform collisions
-    if not _game.player or not _game.player.animated_sprite.sprites():
+    if not _game.player or not _game.player.sprite.sprites():
         return
-    sprite = _game.player.animated_sprite.sprites()[0]
+    sprite = _game.player.sprite.sprites()[0]
 
     # Horizontal collision
     sprite.rect.x += sprite.vx * dt

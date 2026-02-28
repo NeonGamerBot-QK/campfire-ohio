@@ -35,7 +35,7 @@ def initiate_sprite(path, player):
             frames.append(frame)
         animation_frames[animation_name] = frames
     
-    player.animated_sprite.add(AnimatedSprite(0, 0, animation_frames, default_animation="Idle", animation_speed=7))
+    player.sprite.add(AnimatedSprite(0, 0, animation_frames, default_animation="Idle", animation_speed=7))
 
 def handle_event(event):
     global game
@@ -46,12 +46,8 @@ def handle_event(event):
 
 def update(dt):
     global game
-<<<<<<< HEAD
-
-=======
     if game.game_over:
         return
->>>>>>> eb1e906d350aeaeb01e96e821059eb1d35c2dda5
     game.player.update(game.dt, game.pressed_keys)
 
 def draw(screen):
@@ -59,3 +55,4 @@ def draw(screen):
     if game.game_over:
         return
     game.player.draw(screen)
+    game.player.projectiles.draw(screen)

@@ -39,9 +39,9 @@ def update(dt):
     if hb and hb.hp <= 0:
         _game.game_over = True
         return
-    if not _game.player or not _game.player.animated_sprite.sprites():
+    if not _game.player or not _game.player.sprite.sprites():
         return
-    sprite = _game.player.animated_sprite.sprites()[0]
+    sprite = _game.player.sprite.sprites()[0]
     screen_width, screen_height = _screen.get_size()
     # Clamp player position to screen bounds
     sprite.rect.clamp_ip(pygame.Rect(0, 0, screen_width, screen_height))
