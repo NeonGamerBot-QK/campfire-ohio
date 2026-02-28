@@ -5,12 +5,12 @@ import Game
 pygame.init()
 surface = pygame.display.set_mode((600, 400))
 
-game.setup(screen)
+game = Game(clock)
 
 def start_the_game():
     # This function is called when the "Play" button is clicked
     print("Game Started!")
-    game = Game(clock)
+    game.setup(screen)
     # Add your game logic here
     pass
 
