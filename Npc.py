@@ -1,6 +1,7 @@
 import os
 import pygame
 from AnimatedSprite import AnimatedSprite
+from ProjectileManager import ProjectileManager
 
 
 def load_water_animations(variant_path):
@@ -81,6 +82,9 @@ class Npc:
         self.attack_every = 2.0
         self.shock_timer = 0
         self.shock_interval = 1.0  # Damage the player every 1 second while in range
+        self.shoot_timer = 0
+        self.shoot_interval = 1.5  # Shoot every 1.5 seconds when attacking
+        self.projectile_manager = ProjectileManager("./assets/seapickle.png", speed=150)
         self.hp = 30
         self.hurt_timer = 0
         self.hurt_duration = 0.3  # How long to play Hurt before resuming
@@ -130,8 +134,8 @@ class Npc:
             return
 
         # Check projectile collisions with player's pickles
-        if player and player.projectiles:
-            hits = pygame.sprite.spritecollide(self.sprite, player.projectiles, True)
+        if player and player.projectile_manager.projectiles:
+            hits = pygame.sprite.spritecollide(self.sprite, player.projectile_manager.projectiles, True)
             if hits:
                 self.hp -= player.attack_damage
                 if self.hp <= 0:
@@ -165,6 +169,17 @@ class Npc:
                 self.attacking = True
                 self.sprite.play("Attack")
 
+            # Shoot projectiles toward the player on a timer
+            self.shoot_timer += dt
+            if self.shoot_timer >= self.shoot_interval:
+                self.shoot_timer = 0
+                player_center = player.sprite.sprites()[0].rect.center
+                self.projectile_manager.shoot(
+                    self.sprite.rect.centerx, self.sprite.rect.centery,
+                    vx=player_center[0] - self.sprite.rect.centerx,
+                    vy=player_center[1] - self.sprite.rect.centery
+                )
+
             # Damage the player on a timer when in shock range
             if player_in_shock_range and healthbar:
                 self.shock_timer += dt
@@ -191,6 +206,14 @@ class Npc:
         self.sprite.vx = self.patrol_speed * self.direction
         self.sprite.flip_x = self.direction < 0
 
+        # Check if NPC projectiles hit the player
+        if player and player.sprite.sprites() and healthbar:
+            player_sprite = player.sprite.sprites()[0]
+            hits = pygame.sprite.spritecollide(player_sprite, self.projectile_manager.projectiles, True)
+            if hits:
+                healthbar.hp = max(0, healthbar.hp - self.attack_damage * len(hits))
+
+        self.projectile_manager.update(dt)
         self.animated_sprite.update(dt)
 
     def take_damage(self):
@@ -209,5 +232,6 @@ class Npc:
             self.sprite.play("Death", loop=False)
 
     def draw(self, screen):
-        """Draw the NPC to the screen."""
+        """Draw the NPC and its projectiles to the screen."""
         self.animated_sprite.draw(screen)
+        self.projectile_manager.draw(screen)

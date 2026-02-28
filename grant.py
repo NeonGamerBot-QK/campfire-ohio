@@ -55,4 +55,3 @@ def draw(screen):
     if game.game_over:
         return
     game.player.draw(screen)
-    game.player.projectiles.draw(screen)
