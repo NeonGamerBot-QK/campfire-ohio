@@ -1,5 +1,6 @@
 # Neon's code goes here
 import pygame
+import grant
 from healthbar import *
 _screen = None
 hb = None
@@ -8,10 +9,10 @@ max_health = 100
 health = 20
 ratio = health / max_health
 
-def setup(screen):
-    """Initialize Neon's module with the display surface."""
+def setup(game):
+    """Initialize Neon's module with the Game instance."""
     global _screen, hb
-    _screen = screen
+    _screen = game.screen
     hb = HealthBar(10, 10, 200, 20, max_health)
     hb.hp = health
 
@@ -23,7 +24,12 @@ def handle_event(event):
 
 def update(dt):
     """Update Neon's game logic each frame."""
-    pass
+    if not grant.player.sprites():
+        return
+    sprite = grant.player.sprites()[0]
+    screen_width, screen_height = _screen.get_size()
+    # Clamp player position to screen bounds
+    sprite.rect.clamp_ip(pygame.Rect(0, 0, screen_width, screen_height))
 
 """
 @source https://stackoverflow.com/questions/52045413/setting-screen-fill-as-a-gradient-in-pygame
