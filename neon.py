@@ -1,20 +1,26 @@
 # Neon's code goes here
 import pygame
-
+from healthbar import *
 _screen = None
+hb = None
 
+max_health = 100
+health = 20
+ratio = health / max_health
 
 def setup(screen):
     """Initialize Neon's module with the display surface."""
-    global _screen
+    global _screen, hb
     _screen = screen
-    # screen.fill((0, 0, 0))
-
+    hb = HealthBar(10, 10, 200, 20, max_health)
+    hb.hp = health
 
 
 def handle_event(event):
     """Handle pygame events for Neon's module."""
-    pass
+    if event.type == pygame.KEYDOWN and event.key == pygame.K_p:
+        if hb:
+            hb.hp = max(0, hb.hp - 10)
 
 
 def update(dt):
@@ -52,3 +58,5 @@ def draw(screen):
     """Draw Neon's visuals to the screen."""
     gradient_surface = vertical(screen.get_size(), (0, 255, 255, 255),(0, 0, 255, 255))
     screen.blit(gradient_surface, (0, 0))
+    if hb:
+        hb.draw(screen)
