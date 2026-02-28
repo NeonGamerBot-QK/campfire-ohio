@@ -1,12 +1,13 @@
 # Neon's code goes here
 import os
+import random
 import pygame
 from healthbar import *
 from Npc import Npc
 _screen = None
 _game = None
 hb = None
-npc = None
+npcs = []
 
 max_health = 100
 health = 100
@@ -14,12 +15,19 @@ ratio = health / max_health
 
 def setup(game):
     """Initialize Neon's module with the Game instance."""
-    global _screen, _game, hb, npc
+    global _screen, _game, hb, npcs
     _game = game
     _screen = game.screen
     hb = HealthBar(10, 10, 200, 20, max_health)
     hb.hp = health
-    npc = Npc(pygame.sprite.Group(), "./assets/Water assets/1", x=400, y=300)
+    # Spawn 2 NPCs at random positions with random water asset variants
+    screen_width, screen_height = _screen.get_size()
+    variants = [str(v) for v in range(1, 7)]
+    for _ in range(2):
+        variant = random.choice(variants)
+        x = random.randint(100, screen_width - 100)
+        y = random.randint(100, screen_height - 100)
+        npcs.append(Npc(pygame.sprite.Group(), f"./assets/Water assets/{variant}", x=x, y=y))
 
 
 def handle_event(event):
@@ -48,8 +56,8 @@ def update(dt):
     screen_width, screen_height = _screen.get_size()
     # Clamp player position to screen bounds
     sprite.rect.clamp_ip(pygame.Rect(0, 0, screen_width, screen_height))
-    # Update NPC with player proximity and shock damage
-    if npc:
+    # Update NPCs with player proximity and shock damage
+    for npc in npcs:
         npc.update(dt, player=_game.player, healthbar=hb)
 
 """
@@ -96,7 +104,7 @@ def draw(screen):
         return
     gradient_surface = vertical(screen.get_size(), (0, 255, 255, 255),(0, 0, 255, 255))
     screen.blit(gradient_surface, (0, 0))
-    if npc:
+    for npc in npcs:
         npc.draw(screen)
     if hb:
         hb.draw(screen)
