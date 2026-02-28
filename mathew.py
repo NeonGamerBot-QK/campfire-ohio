@@ -3,7 +3,7 @@ import pygame
 
 # Colors
 BLACK = (0, 0, 0)
-BLUE = (0, 0, 255)
+GREEN = (0, 255, 0)
 
 # Platform data: (x, y, width, height)
 platforms_data = [
