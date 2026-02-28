@@ -6,7 +6,7 @@ import sys
 import random
 
 _screen = None
-_sprites = pygame.sprite.Group()
+player = pygame.sprite.Group()
 
 
 def setup(screen):
@@ -18,9 +18,8 @@ def setup(screen):
 
     
 def initiate_sprites():
-    global _sprites
+    global player
 
-    N_FRAMES = 6
     FRAME_WIDTH = 48
     FRAME_HEIGHT = 48
 
@@ -30,6 +29,12 @@ def initiate_sprites():
 
     for file_name in os.listdir(path):
         image = pygame.image.load(os.path.join(path, file_name)).convert_alpha()
+
+        sheet_width = image.get_width()
+        sheet_height = image.get_height()
+
+        N_FRAMES = sheet_width // FRAME_WIDTH
+
         animation_name = file_name.replace(".png", "")
         frames = []
 
@@ -37,9 +42,8 @@ def initiate_sprites():
             frame = image.subsurface((i * FRAME_WIDTH, 0, FRAME_WIDTH, FRAME_HEIGHT))
             frames.append(frame)
         animation_frames[animation_name] = frames
-
-    player = AnimatedSprite(0, 0, animation_frames, default_animation="Idle")
-    _sprites.add(player)
+    
+    player.add(AnimatedSprite(0, 0, animation_frames, default_animation="Idle"))
 
 
 
@@ -51,10 +55,10 @@ def handle_event(event):
 
 def update(dt):
     """Update Grant's game logic each frame."""
-    _sprites.update(dt)
+    player.update(dt)
 
 
 def draw(screen):
     """Draw Grant's visuals to the screen."""
     screen.fill((255, 0, 255))  # Neon pink background
-    _sprites.draw(screen)
+    player.draw(screen)
