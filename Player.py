@@ -1,5 +1,5 @@
 import pygame
-import Projectile
+from ProjectileManager import ProjectileManager
 
 class Player:
     def __init__(self, animated_sprite):
@@ -11,20 +11,13 @@ class Player:
         self.xp = 0
         self.level = 1
         self.xp_to_next_level = 10
-        self.projectile_img = pygame.image.load("./assets/seapickle.png").convert_alpha()  # Placeholder for projectile image
-        self.projectiles = pygame.sprite.Group()  # Group to hold projectiles
-        self.last_facing = None
+        self.projectile_manager = ProjectileManager("./assets/seapickle.png")  # Projectile image
 
     def update(self, dt, pressed_keys):
         self.attack_timer += dt
         curr_sprite = self.sprite.sprites()[0]
 
-        # Track last facing direction for projectiles
-        if not hasattr(self, "last_facing"):
-            self.last_facing = pygame.math.Vector2(1, 0)  # Default facing right
-
         vx, vy = 0, 0
-
         if any(k in pressed_keys for k in [pygame.K_d, pygame.K_RIGHT]):
             vx += 100
         if any(k in pressed_keys for k in [pygame.K_a, pygame.K_LEFT]):
@@ -34,55 +27,37 @@ class Player:
         if any(k in pressed_keys for k in [pygame.K_s, pygame.K_DOWN]):
             vy += 100
 
-        # Determine facing direction
-        if vx != 0 or vy != 0:
-            self.last_facing = pygame.math.Vector2(vx, vy).normalize()
-            # Flip sprite visually
-            curr_sprite.flip_x = vx < 0
-            curr_sprite.flip_y = vy > 0
-
         curr_sprite.vx = vx
         curr_sprite.vy = vy
 
+        # Play animations
         if vx != 0 or vy != 0:
             curr_sprite.play("Swim2" if abs(vy) > abs(vx) else "Swim")
         else:
             curr_sprite.play("Idle")
+            curr_sprite.vy = 20  # slow drift down
             curr_sprite.flip_y = False
-            curr_sprite.vy = 20  # Gravity drift
 
-        # Handle attack key
+        # Attack input
         if pygame.K_SPACE in pressed_keys:
-            self.attack()
+            self.attack(curr_sprite)
 
-        # Check if attack animation is finished
+        # End attack when animation is done
         if self.attacking and curr_sprite.frame_index >= len(curr_sprite.animations["Attack"]) - 1:
             self.attacking = False
 
         self.sprite.update(dt)
-        self.projectiles.update(dt)
+        self.projectile_manager.update(dt)
 
-    def attack(self):
+    def attack(self, curr_sprite):
         if self.attack_timer >= self.attack_cooldown:
             self.attacking = True
             self.attack_timer = 0
-            curr_sprite = self.sprite.sprites()[0]
-
-            # Use last facing direction for projectile
-            direction = self.last_facing * 200  # Speed of projectile
-            self.projectiles.add(Projectile.Projectile(
-                x=curr_sprite.rect.centerx,
-                y=curr_sprite.rect.centery,
-                vx=direction.x,
-                vy=direction.y,
-                image=self.projectile_img,
-                owner=self
-            ))
-
             curr_sprite.play("Attack", loop=False)
+            # Shoot projectile from player's center
+            self.projectile_manager.shoot(curr_sprite.rect.centerx, curr_sprite.rect.centery)
 
     def gain_xp(self, amount):
-        """Add XP and level up when threshold is reached (10 * level to level up)."""
         self.xp += amount
         while self.xp >= self.xp_to_next_level:
             self.xp -= self.xp_to_next_level
@@ -91,3 +66,4 @@ class Player:
 
     def draw(self, screen):
         self.sprite.draw(screen)
+        self.projectile_manager.draw(screen)
