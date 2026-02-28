@@ -94,7 +94,8 @@ class Player:
             self.xp_to_next_level = 10 * self.level
             levels_gained += 1
         self.attack_damage += 2 * levels_gained  # Increase attack damage by 2 per level
-        self.game.healthbar.max_hp += 20 * levels_gained  # Increase max HP by 5 per level
+        self.game.healthbar.max_hp = max(self.game.healthbar.max_hp, self.game.healthbar.hp + 20 * levels_gained)  # Increase max HP by 20 per level
+        self.game.healthbar.hp += 20 * levels_gained  # Increase max HP by 5 per level
         return levels_gained
 
     def draw(self, screen):
