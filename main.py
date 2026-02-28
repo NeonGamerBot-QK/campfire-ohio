@@ -1,7 +1,5 @@
+from Game import Game
 import pygame
-import neon
-import mathew
-import grant
 
 pygame.init()
 
@@ -10,14 +8,9 @@ SCREEN_HEIGHT = 600
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Water Space Platformer")
 clock = pygame.time.Clock()
+game = Game()
 
-# List of all player modules for easy iteration
-modules = [neon, mathew, grant]
-
-# Call each module's setup() if it exists
-for mod in modules:
-    if hasattr(mod, "setup"):
-        mod.setup(screen)
+game.setup(screen, clock)
 
 running = True
 while running:
@@ -26,21 +19,11 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        # Pass events to each module
-        for mod in modules:
-            if hasattr(mod, "handle_event"):
-                mod.handle_event(event)
+        game.handle_event(event)
 
-    # Call each module's update()
-    for mod in modules:
-        if hasattr(mod, "update"):
-            mod.update(dt)
+    game.update(dt)
 
-
-    # Call each module's draw()
-    for mod in modules:
-        if hasattr(mod, "draw"):
-            mod.draw(screen)
+    game.draw()
 
     pygame.display.flip()
 

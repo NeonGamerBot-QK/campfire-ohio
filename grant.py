@@ -15,26 +15,19 @@ def setup(screen):
     global _screen
     _screen = screen
 
-    initiate_sprites()
+    initiate_sprite("./Sprites/Character Animations/", player)
 
     
-def initiate_sprites():
-    global player
-
+def initiate_sprite(path, sprite_group):
     FRAME_WIDTH = 48
     FRAME_HEIGHT = 48
 
     animation_frames = {}
 
-    path = "./Sprites/Character Animations/"
-
     for file_name in os.listdir(path):
         image = pygame.image.load(os.path.join(path, file_name)).convert_alpha()
 
-        sheet_width = image.get_width()
-        sheet_height = image.get_height()
-
-        N_FRAMES = sheet_width // FRAME_WIDTH
+        N_FRAMES = image.get_width() // FRAME_WIDTH
 
         animation_name = file_name.replace(".png", "")
         frames = []
@@ -44,7 +37,7 @@ def initiate_sprites():
             frames.append(frame)
         animation_frames[animation_name] = frames
     
-    player.add(AnimatedSprite(0, 0, animation_frames, default_animation="Idle", animation_speed=7))
+    sprite_group.add(AnimatedSprite(0, 0, animation_frames, default_animation="Idle", animation_speed=7))
 
 def handle_event(event):
     global pressed_keys
