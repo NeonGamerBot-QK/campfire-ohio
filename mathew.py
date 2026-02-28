@@ -7,7 +7,8 @@ GREEN = (0, 255, 0)
 # Platform data: (x, y, width, height)
 platforms_data = [
     (0, 550, 800, 50)# Ground platform
-    (150, 400, 100, 20)(400, 300, 150, 20)
+    (150, 400, 100, 20)
+    (400, 300, 150, 20)
 ]
 
 # List of rect objects
