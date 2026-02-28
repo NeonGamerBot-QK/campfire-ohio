@@ -137,7 +137,7 @@ class Npc:
         if player and player.projectile_manager.projectiles:
             hits = pygame.sprite.spritecollide(self.sprite, player.projectile_manager.projectiles, True)
             if hits:
-                self.hp -= player.attack_damage
+                self.hp -= player.attack_damage * len(hits)
                 if self.hp <= 0:
                     self.die()
                     self.animated_sprite.update(dt)
