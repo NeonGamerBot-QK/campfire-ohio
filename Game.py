@@ -4,11 +4,13 @@ import mathew
 import grant
 
 class Game:
-    def __init__(self):
+    def __init__(self, clock):
         self.screen = None
-        self.clock = None
+        self.clock = clock
         self.running = True
         self.pressed_keys = set()
+
+        self.dt = self.clock.tick(60) / 1000.0
 
         self.player = None  # Placeholder for player sprite or group
         self.space_boss = None  # Placeholder for space boss sprite or group
@@ -17,25 +19,31 @@ class Game:
 
         self.modules = [neon, mathew, grant]
 
-    def setup(self, screen, clock):
+    def setup(self, screen):
         self.screen = screen
-        self.clock = clock
 
         for mod in self.modules:
             if hasattr(mod, "setup"):
                 mod.setup(self)
 
     def handle_event(self, event):
+        if event.type == pygame.QUIT:
+            self.running = False
+
         for mod in self.modules:
             if hasattr(mod, "handle_event"):
                 mod.handle_event(event)
 
-    def update(self, dt):
+    def update(self):
+        self.dt = self.clock.tick(60) / 1000.0
+
         for mod in self.modules:
             if hasattr(mod, "update"):
-                mod.update(dt)
+                mod.update(self.dt)
 
     def draw(self):
+        self.screen.fill((0, 0, 0))
         for mod in self.modules:
             if hasattr(mod, "draw"):
-                mod.draw(self.screen)
+                mod.draw(self.screen)  
+        pygame.display.flip()
