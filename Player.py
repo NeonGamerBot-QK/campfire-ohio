@@ -35,8 +35,8 @@ class Player:
             curr_sprite.play("Idle")
             curr_sprite.flip_y = False # Reset flip when idle
             curr_sprite.vy = 20        # Gravity drift
-        
 
         self.animated_sprite.update(dt)
+
     def draw(self, screen):
         self.animated_sprite.draw(screen)
