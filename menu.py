@@ -1,19 +1,21 @@
 import pygame
 import pygame_menu
-import main
+import Gain
 
 pygame.init()
 surface = pygame.display.set_mode((600, 400))
 
+game.setup(screen)
+
 def start_the_game():
     # This function is called when the "Play" button is clicked
     print("Game Started!")
+    game = Game(clock)
     # Add your game logic here
     pass
 
 # Create the menu
-menu = pygame_menu.Menu('Welcome', 600, 400,
-                       theme=pygame_menu.themes.THEME_BLUE)
+menu = pygame_menu.Menu('Welcome', 600, 400, theme=pygame_menu.themes.THEME_BLUE)
 
 # Add a button that calls the 'start_the_game' function
 menu.add.button('Play', start_the_game)
