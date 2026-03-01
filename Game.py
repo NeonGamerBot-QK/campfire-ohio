@@ -48,5 +48,4 @@ class Game:
         self.screen.fill((0, 0, 0))
         for mod in self.modules:
             if hasattr(mod, "draw"):
-                mod.draw(self.screen)  
-        pygame.display.flip()
+                mod.draw(self.screen) 

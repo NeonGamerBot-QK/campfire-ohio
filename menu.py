@@ -1,23 +1,28 @@
 import pygame
-import pygame_menu
 
+class SimpleMenu:
+    def __init__(self, screen, on_play):
+        self.screen = screen
+        self.on_play = on_play
+        self.enabled = True
+        self.font = pygame.font.SysFont(None, 60)
 
-def create_menu(screen, on_play):
-    """
-    Create and return the main menu.
+    def is_enabled(self):
+        return self.enabled
 
-    Args:
-        screen: The pygame display surface.
-        on_play: Callback function to run when 'Play' is pressed.
+    def disable(self):
+        self.enabled = False
 
-    Returns:
-        The pygame_menu.Menu instance.
-    """
-    width, height = screen.get_size()
-    main_menu = pygame_menu.Menu(
-        'Water Space Platformer', width, height,
-        theme=pygame_menu.themes.THEME_BLUE
-    )
-    main_menu.add.button('Play', on_play)
-    main_menu.add.button('Exit', pygame_menu.events.EXIT)
-    return main_menu
+    def update(self, events):
+        for event in events:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    self.on_play()
+
+    def draw(self):
+        self.screen.fill((0, 0, 0))
+        title = self.font.render("Water Space Platformer", True, (255, 255, 255))
+        start = self.font.render("Press SPACE to Play", True, (255, 255, 255))
+
+        self.screen.blit(title, (150, 200))
+        self.screen.blit(start, (200, 300))
