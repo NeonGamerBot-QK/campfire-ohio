@@ -20,11 +20,14 @@ game_started = False
 def start_game():
     global game_started
     game.setup(screen)
+    if game.skip_to_boss and game.player:
+        game.player.level = 3
+        game.skip_to_boss = False
     game_started = True
     main_menu.disable()
 
 
-main_menu = SimpleMenu(screen, start_game)
+main_menu = SimpleMenu(screen, start_game, game)
 
 
 async def main():
