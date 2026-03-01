@@ -1,7 +1,7 @@
 import pygame
-import neon
-import mathew
-import grant
+from src.modules import neon
+from src.modules import mathew
+from src.modules import grant
 
 class Game:
     def __init__(self, clock):

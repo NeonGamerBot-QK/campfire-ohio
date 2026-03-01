@@ -1,8 +1,8 @@
 import pygame
 import asyncio
 import sys
-from game import Game
-from menu import SimpleMenu
+from src.game import Game
+from src.ui.menu import SimpleMenu
 
 pygame.init()
 

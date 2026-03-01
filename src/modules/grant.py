@@ -1,8 +1,8 @@
 # Grant's code goes here
 import os
-from animated_sprite import AnimatedSprite
+from src.components.animated_sprite import AnimatedSprite
 import pygame
-import player
+from src.entities import player
 
 game = None
 

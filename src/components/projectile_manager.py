@@ -1,5 +1,5 @@
 import pygame
-from projectile import Projectile
+from src.components.projectile import Projectile
 
 class ProjectileManager:
     def __init__(self, projectile_image_path, speed=400): # Increased speed for feel

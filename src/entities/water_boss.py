@@ -1,6 +1,6 @@
-from npc import Npc
-from projectile_manager import ProjectileManager
-from healthbar import HealthBar
+from src.entities.npc import Npc
+from src.components.projectile_manager import ProjectileManager
+from src.ui.healthbar import HealthBar
 
 class WaterBoss(Npc):
     def __init__(self, sprite_group, variant_path, x=0, y=0, scale=4.0):

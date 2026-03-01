@@ -2,9 +2,9 @@
 import os
 import random
 import pygame
-from healthbar import *
-from npc import Npc
-import mathew
+from src.ui.healthbar import HealthBar
+from src.entities.npc import Npc
+from src.modules import mathew
 _screen = None
 _game = None
 hb = None
