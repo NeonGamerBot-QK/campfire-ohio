@@ -1,3 +1,4 @@
+from WaterBoss import WaterBoss
 import pygame
 from ProjectileManager import *
 
@@ -94,8 +95,11 @@ class Player:
             self.xp_to_next_level = 10 * self.level
             levels_gained += 1
         self.attack_damage += 2 * levels_gained  # Increase attack damage by 2 per level
-        self.game.healthbar.max_hp = max(self.game.healthbar.max_hp, self.game.healthbar.hp + 20 * levels_gained)  # Increase max HP by 20 per level
-        self.game.healthbar.hp += 20 * levels_gained  # Increase max HP by 5 per level
+        self.game.healthbar.max_hp = max(self.game.healthbar.max_hp, self.game.healthbar.hp + 10 * levels_gained)  # Increase max HP by 20 per level
+        self.game.healthbar.hp += 10 * levels_gained  # Increase max HP by 5 per level
+
+        if self.level >= 5 and not hasattr(self.game, "water_boss", None):
+            self.game.water_boss = WaterBoss(pygame.sprite.Group(), "./assets/Water assets/6", x=200, y=200, scale=4.0)
         return levels_gained
 
     def draw(self, screen):

@@ -47,11 +47,15 @@ def handle_event(event):
 def update(dt):
     global game
     if game.game_over:
+        game.water_boss = None
         return
+    game.water_boss.update(dt, player=game.player, healthbar=game.healthbar) if game.water_boss else None
     game.player.update()
 
 def draw(screen):
     """Draw Grant's visuals to the screen."""
     if game.game_over:
         return
+    
+    game.water_boss.draw(screen) if game.water_boss else None
     game.player.draw(screen)

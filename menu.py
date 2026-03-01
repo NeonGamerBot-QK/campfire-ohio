@@ -21,7 +21,7 @@ class SimpleMenu:
 
     def draw(self):
         self.screen.fill((0, 0, 0))
-        title = self.font.render("Water Space Platformer", True, (255, 255, 255))
+        title = self.font.render("Pickl Power", True, (255, 255, 255))
         start = self.font.render("Press SPACE to Play", True, (255, 255, 255))
 
         self.screen.blit(title, (150, 200))

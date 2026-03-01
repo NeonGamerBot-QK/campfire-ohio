@@ -4,7 +4,7 @@ from AnimatedSprite import AnimatedSprite
 from ProjectileManager import ProjectileManager
 
 
-def load_water_animations(variant_path):
+def load_water_animations(variant_path, scale=1):
     """
     Load animation frames from a Water assets variant folder.
     Auto-detects frame dimensions per sprite sheet since they vary
@@ -45,6 +45,9 @@ def load_water_animations(variant_path):
         frames = []
         for i in range(num_frames):
             frame = image.subsurface((i * frame_width, 0, frame_width, img_height))
+            scaled_width = int(frame_width * scale)
+            scaled_height = int(img_height * scale)
+            frame = pygame.transform.scale(frame, (scaled_width, scaled_height))
             frames.append(frame)
         animation_frames[animation_name] = frames
 
@@ -57,7 +60,7 @@ class Npc:
     # Range at which the NPC deals damage to the player
     SHOCK_RANGE = 60
 
-    def __init__(self, sprite_group, variant_path, x=0, y=0, patrol_speed=80):
+    def __init__(self, sprite_group, variant_path, x=0, y=0, patrol_speed=80, scale=1):
         """
         Create an NPC using Water assets.
 
@@ -68,7 +71,7 @@ class Npc:
             y: Starting y position.
             patrol_speed: Horizontal movement speed in pixels/sec.
         """
-        animation_frames = load_water_animations(variant_path)
+        animation_frames = load_water_animations(variant_path, scale=scale)
         self.animated_sprite = sprite_group
         self.sprite = AnimatedSprite(x, y, animation_frames, default_animation="Idle", animation_speed=7)
         self.animated_sprite.add(self.sprite)
