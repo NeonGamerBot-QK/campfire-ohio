@@ -4,6 +4,7 @@ import random
 import pygame
 from healthbar import *
 from Npc import Npc
+import mathew
 _screen = None
 _game = None
 hb = None
@@ -68,6 +69,7 @@ def update(dt):
         npc.update(dt, player=_game.player, healthbar=hb)
     # Remove dead NPCs, award XP, and respawn replacements
     respawn_count = 0
+    previous_level = _game.player.level
     for npc in _game.npcs:
         if npc.removable:
             levels = _game.player.gain_xp(2)
@@ -76,6 +78,10 @@ def update(dt):
                 hb.max_hp += levels
                 hb.hp = min(hb.max_hp, hb.hp + int(hb.max_hp * 0.1) * levels)
             respawn_count += 1
+    # Switch platform level every 3 player levels
+    new_level = _game.player.level
+    if new_level // 3 > previous_level // 3:
+        mathew.switch_platform_level(new_level // 3)
     _game.npcs[:] = [npc for npc in _game.npcs if not npc.removable]
     for _ in range(respawn_count):
         _game.npcs.append(spawn_npc())
