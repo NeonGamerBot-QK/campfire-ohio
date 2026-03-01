@@ -4,6 +4,7 @@ import random
 import pygame
 from healthbar import *
 from Npc import Npc
+import mathew
 _screen = None
 _game = None
 hb = None
@@ -13,6 +14,15 @@ health = 100
 ratio = health / max_health
 NPC_COUNT = 2
 VARIANTS = [str(v) for v in range(1, 7)]
+
+# Scene transition state
+_transition_active = False
+_transition_timer = 0.0
+_transition_phase = "none"  # "fade_out", "hold", "fade_in"
+_pending_platform_level = 0
+FADE_OUT_DURATION = 0.5
+HOLD_DURATION = 1.2
+FADE_IN_DURATION = 0.5
 
 
 def spawn_npc():
@@ -49,9 +59,55 @@ def handle_event(event):
             hb.hp = max_health
 
 
+def _start_transition(platform_level_index):
+    """Begin a scene transition to a new platform level."""
+    global _transition_active, _transition_timer, _transition_phase, _pending_platform_level
+    _transition_active = True
+    _transition_timer = 0.0
+    _transition_phase = "fade_out"
+    _pending_platform_level = platform_level_index
+
+
+def _apply_scene_switch():
+    """Swap platforms, clear NPCs, and reset the player position mid-transition."""
+    mathew.switch_platform_level(_pending_platform_level)
+    # Clear all existing NPCs and respawn fresh ones
+    _game.npcs.clear()
+    for _ in range(NPC_COUNT):
+        _game.npcs.append(spawn_npc())
+    # Reset player to a safe position on the ground
+    if _game.player and _game.player.sprite.sprites():
+        sprite = _game.player.sprite.sprites()[0]
+        sprite.rect.midbottom = (_screen.get_width() // 2, 550)
+
+
+def _update_transition(dt):
+    """Advance the scene transition timer through fade_out → hold → fade_in phases."""
+    global _transition_active, _transition_timer, _transition_phase
+    _transition_timer += dt
+
+    if _transition_phase == "fade_out":
+        if _transition_timer >= FADE_OUT_DURATION:
+            _transition_timer = 0.0
+            _transition_phase = "hold"
+            _apply_scene_switch()
+    elif _transition_phase == "hold":
+        if _transition_timer >= HOLD_DURATION:
+            _transition_timer = 0.0
+            _transition_phase = "fade_in"
+    elif _transition_phase == "fade_in":
+        if _transition_timer >= FADE_IN_DURATION:
+            _transition_active = False
+            _transition_phase = "none"
+
+
 def update(dt):
     """Update Neon's game logic each frame."""
     if _game.game_over:
+        return
+    # Handle scene transition (pauses gameplay)
+    if _transition_active:
+        _update_transition(dt)
         return
     # Trigger game over when health runs out
     if hb and hb.hp <= 0:
@@ -68,6 +124,7 @@ def update(dt):
         npc.update(dt, player=_game.player, healthbar=hb)
     # Remove dead NPCs, award XP, and respawn replacements
     respawn_count = 0
+    previous_level = _game.player.level
     for npc in _game.npcs:
         if npc.removable:
             levels = _game.player.gain_xp(2)
@@ -76,6 +133,10 @@ def update(dt):
                 hb.max_hp += levels
                 hb.hp = min(hb.max_hp, hb.hp + int(hb.max_hp * 0.1) * levels)
             respawn_count += 1
+    # Switch platform level every 3 player levels (with scene transition)
+    new_level = _game.player.level
+    if new_level // 3 > previous_level // 3:
+        _start_transition(new_level // 3)
     _game.npcs[:] = [npc for npc in _game.npcs if not npc.removable]
     for _ in range(respawn_count):
         _game.npcs.append(spawn_npc())
@@ -107,6 +168,30 @@ def vertical(size, startcolor, endcolor):
     return pygame.transform.scale(bigSurf, size)
 
 
+def _draw_transition(screen):
+    """Render the scene transition overlay (fade out → level title → fade in)."""
+    alpha = 0
+    if _transition_phase == "fade_out":
+        # Fade from transparent to fully opaque black
+        alpha = int(255 * min(_transition_timer / FADE_OUT_DURATION, 1.0))
+    elif _transition_phase == "hold":
+        alpha = 255
+    elif _transition_phase == "fade_in":
+        # Fade from opaque black back to transparent
+        alpha = int(255 * (1.0 - min(_transition_timer / FADE_IN_DURATION, 1.0)))
+
+    overlay = pygame.Surface(screen.get_size(), pygame.SRCALPHA)
+    overlay.fill((0, 0, 0, alpha))
+    screen.blit(overlay, (0, 0))
+
+    # Show level title during the hold phase
+    if _transition_phase == "hold":
+        level_number = (_pending_platform_level % len(mathew.PLATFORM_LEVELS)) + 1
+        font = pygame.font.SysFont(None, 72)
+        title = font.render(f"STAGE {level_number}", True, (255, 255, 255))
+        screen.blit(title, title.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2)))
+
+
 def draw(screen):
     """Draw Neon's visuals to the screen."""
     if _game.game_over:
@@ -133,3 +218,6 @@ def draw(screen):
         font = pygame.font.SysFont(None, 24)
         level_text = font.render(f"Lv {_game.player.level}  XP {_game.player.xp}/{_game.player.xp_to_next_level}", True, (255, 255, 255))
         screen.blit(level_text, (10, 35))
+    # Draw transition overlay on top of everything
+    if _transition_active:
+        _draw_transition(screen)

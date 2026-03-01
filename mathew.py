@@ -4,16 +4,38 @@ import pygame
 BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
 
-# Platform data: (x, y, width, height)
-platforms_data = [
-    (0, 550, 800, 50),  # Ground platform
-    (150, 400, 100, 20),
-    (400, 300, 150, 20)
+# Platform levels: each entry is a list of (x, y, width, height) tuples + speeds
+PLATFORM_LEVELS = [
+    {
+        "platforms": [(0, 550, 800, 50), (150, 400, 100, 20), (400, 300, 150, 20)],
+        "speeds": [0, 2, 2],
+    },
+    {
+        "platforms": [(0, 550, 800, 50), (100, 450, 120, 20), (300, 350, 100, 20), (550, 250, 130, 20)],
+        "speeds": [0, -2, 3, -2],
+    },
+    {
+        "platforms": [(0, 550, 800, 50), (50, 420, 80, 20), (250, 330, 80, 20), (450, 240, 80, 20), (650, 150, 80, 20)],
+        "speeds": [0, 3, -3, 3, -3],
+    },
 ]
 
-# List of rect objects
-platforms = [pygame.Rect(data) for data in platforms_data]
-platform_speeds = [0, 2, 2]  # Speed for each platform (0 for ground)
+current_platform_level = 0
+
+# List of rect objects (initialized to first level)
+platforms = [pygame.Rect(data) for data in PLATFORM_LEVELS[0]["platforms"]]
+platform_speeds = list(PLATFORM_LEVELS[0]["speeds"])
+
+
+def switch_platform_level(level_index):
+    """Switch to a new platform layout by index (wraps around)."""
+    global platforms, platform_speeds, current_platform_level
+    current_platform_level = level_index % len(PLATFORM_LEVELS)
+    level_data = PLATFORM_LEVELS[current_platform_level]
+    platforms = [pygame.Rect(data) for data in level_data["platforms"]]
+    platform_speeds = list(level_data["speeds"])
+    if _game:
+        _game.platforms = platforms
 
 _screen = None
 _game = None
