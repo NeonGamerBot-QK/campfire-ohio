@@ -51,7 +51,11 @@ def update(dt):
         game.player = Player.Player(pygame.sprite.Group(), game)
         initiate_sprite("./Sprites/Character Animations/", game.player)
         return
-    game.water_boss.update(dt, player=game.player, healthbar=game.healthbar) if game.water_boss else None
+    if game.water_boss:
+        game.water_boss.update(dt, player=game.player, healthbar=game.healthbar)
+        if game.water_boss.removable:
+            game.player.gain_xp(50)
+            game.water_boss = None
     game.player.update()
 
 def draw(screen):
