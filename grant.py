@@ -35,7 +35,7 @@ def initiate_sprite(path, player):
             frames.append(frame)
         animation_frames[animation_name] = frames
     
-    player.sprite.add(AnimatedSprite(0, 0, animation_frames, default_animation="Idle", animation_speed=7))
+    player.sprite.add(AnimatedSprite(400, 250, animation_frames, default_animation="Idle", animation_speed=7))
 
 def handle_event(event):
     global game
@@ -48,6 +48,8 @@ def update(dt):
     global game
     if game.game_over:
         game.water_boss = None
+        game.player = Player.Player(pygame.sprite.Group(), game)
+        initiate_sprite("./Sprites/Character Animations/", game.player)
         return
     game.water_boss.update(dt, player=game.player, healthbar=game.healthbar) if game.water_boss else None
     game.player.update()

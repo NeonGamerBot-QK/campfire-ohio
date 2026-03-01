@@ -3,7 +3,6 @@ import pygame
 from ProjectileManager import *
 
 class Player:
-
     def __init__(self, animated_sprite, game):
         self.sprite = animated_sprite
         self.attacking = False
@@ -98,7 +97,7 @@ class Player:
         self.game.healthbar.max_hp = max(self.game.healthbar.max_hp, self.game.healthbar.hp + 10 * levels_gained)  # Increase max HP by 20 per level
         self.game.healthbar.hp += 10 * levels_gained  # Increase max HP by 5 per level
 
-        if self.level >= 5 and not hasattr(self.game, "water_boss", None):
+        if self.level >= 3 and not self.game.water_boss:
             self.game.water_boss = WaterBoss(pygame.sprite.Group(), "./assets/Water assets/6", x=200, y=200, scale=4.0)
         return levels_gained
 
