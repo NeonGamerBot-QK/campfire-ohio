@@ -1,9 +1,9 @@
 import pygame
 import sys
-import game
+import Game
 
 class SimpleMenu:
-    def __init__(self, screen, on_play, game):
+    def __init__(self, screen, on_play, Game):
         
         self.game = game
         self.screen = screen
@@ -30,7 +30,7 @@ class SimpleMenu:
                 if event.key == pygame.K_SPACE:
                     self.on_play()
                 if event.key == pygame.K_j:
-                    self.game.skip_to_boss = True
+                    self.Dame.skip_to_boss = True
                     self.on_play()
 
 
