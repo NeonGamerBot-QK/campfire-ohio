@@ -1,6 +1,6 @@
 import pygame
 import sys
-import Player
+import game
 
 class SimpleMenu:
     def __init__(self, screen, on_play, game):
