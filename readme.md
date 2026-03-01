@@ -56,6 +56,8 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
+![Screenshot](ss.png)
+
 A 2D underwater platformer built with Pygame at Hack Club Campfire Ohio. Swim around, shoot sea pickles at hostile fish, and level up.
 
 - **Movement**: WASD/Arrow keys to swim in any direction
