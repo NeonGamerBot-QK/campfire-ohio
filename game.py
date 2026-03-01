@@ -19,6 +19,7 @@ class Game:
         self.platforms = None  # Placeholder for platforms group
         self.npcs = []  # List of active NPCs
         self.healthbar = None  # Placeholder for healthbar instance
+        self.skip_to_boss = False
 
         self.modules = [neon, mathew, grant]
 

@@ -3,7 +3,7 @@ import os
 import random
 import pygame
 from healthbar import *
-from Npc import Npc
+from npc import Npc
 import mathew
 _screen = None
 _game = None

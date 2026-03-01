@@ -1,10 +1,8 @@
 # Grant's code goes here
 import os
-from AnimatedSprite import AnimatedSprite
+from animated_sprite import AnimatedSprite
 import pygame
-import Player
-import sys
-import random
+import player
 
 game = None
 
@@ -12,7 +10,7 @@ def setup(game_obj):
     """Initialize Grant's module with the game object."""
     global game
     game = game_obj
-    game.player = Player.Player(pygame.sprite.Group(), game)  # Pass the game instance to the player
+    game.player = player.Player(pygame.sprite.Group(), game)  # Pass the game instance to the player
     initiate_sprite("./Sprites/Character Animations/", game.player)
 
     
@@ -48,7 +46,7 @@ def update(dt):
     global game
     if game.game_over:
         game.water_boss = None
-        game.player = Player.Player(pygame.sprite.Group(), game)
+        game.player = player.Player(pygame.sprite.Group(), game)
         initiate_sprite("./Sprites/Character Animations/", game.player)
         return
     if game.water_boss:

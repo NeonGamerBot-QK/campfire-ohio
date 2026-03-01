@@ -1,6 +1,6 @@
-from WaterBoss import WaterBoss
+from water_boss import WaterBoss
 import pygame
-from ProjectileManager import *
+from projectile_manager import ProjectileManager
 
 class Player:
     def __init__(self, animated_sprite, game):

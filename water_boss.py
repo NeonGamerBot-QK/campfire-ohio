@@ -1,5 +1,5 @@
-from Npc import Npc
-from ProjectileManager import ProjectileManager
+from npc import Npc
+from projectile_manager import ProjectileManager
 from healthbar import HealthBar
 
 class WaterBoss(Npc):

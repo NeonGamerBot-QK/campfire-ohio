@@ -1,7 +1,7 @@
 import os
 import pygame
-from AnimatedSprite import AnimatedSprite
-from ProjectileManager import ProjectileManager
+from animated_sprite import AnimatedSprite
+from projectile_manager import ProjectileManager
 
 
 def load_water_animations(variant_path, scale=1):

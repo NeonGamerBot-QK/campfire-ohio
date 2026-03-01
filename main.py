@@ -1,7 +1,7 @@
 import pygame
 import asyncio
 import sys
-from Game import Game
+from game import Game
 from menu import SimpleMenu
 
 pygame.init()
@@ -24,7 +24,7 @@ def start_game():
     main_menu.disable()
 
 
-main_menu = SimpleMenu(screen, start_game)
+main_menu = SimpleMenu(screen, start_game, game)
 
 
 async def main():
